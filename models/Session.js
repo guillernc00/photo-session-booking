@@ -9,6 +9,10 @@ const SessionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
   date: {
     type: Date,
     min: Date.now,

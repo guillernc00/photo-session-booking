@@ -5,7 +5,7 @@ const router = express.Router();
 
 //create single session
 router.post('/', async (req, res) => {
-  const { name, date, time, phone, status } = req.body;
+  const { name, date, time, phone, status, email } = req.body;
   try {
     let session = new Session({
       name,
@@ -13,6 +13,7 @@ router.post('/', async (req, res) => {
       time,
       phone,
       status,
+      email,
     });
 
     await session.save();
@@ -47,7 +48,7 @@ router.get('/:id', async (req, res) => {
 
 //update session
 router.put('/:id', async (req, res) => {
-  const { name, date, time, phone, status } = req.body;
+  const { name, date, time, phone, status, email } = req.body;
   try {
     await Session.findByIdAndUpdate(req.params.id, {
       name: name,
@@ -55,11 +56,22 @@ router.put('/:id', async (req, res) => {
       time: time,
       phone: phone,
       status: status,
+      email: email,
     });
 
     const session = await Session.findById(req.params.id);
 
     res.json(session);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+//cancel session
+router.put('/:id', async (req, res) => {
+  try {
+    await Session.findOneAndUpdate(req.params.id, { status: 'CANCELED' });
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
